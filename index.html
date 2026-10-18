@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulnaut</title>
+<meta name="description" content="Simulnaut is an independent electronic music project with a focus on space, sci-fi, and faith. Listen on Bandcamp, Spotify, Apple Music, SoundCloud and YouTube.">
+<meta name="theme-color" content="#05060a">
+<link rel="canonical" href="https://simulnaut.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Simulnaut">
+<meta property="og:title" content="Simulnaut">
+<meta property="og:description" content="Simulnaut is an independent electronic music project with a focus on space, sci-fi, and faith.">
+<meta property="og:url" content="https://simulnaut.com/">
+<meta property="og:image" content="https://simulnaut.com/assets/og.jpg">
+<meta property="og:image:width" content="960">
+<meta property="og:image:height" content="960">
+<meta property="og:image:alt" content="SIMULNAUT logo: Earth gripped by red octopus tentacles">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@simulnaut">
+<meta name="twitter:title" content="Simulnaut">
+<meta name="twitter:description" content="Simulnaut is an independent electronic music project with a focus on space, sci-fi, and faith.">
+<meta name="twitter:image" content="https://simulnaut.com/assets/og.jpg">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305060a'/%3E%3Ctext x='16' y='24' font-family='Arial Black,Arial' font-weight='900' font-size='22' text-anchor='middle' fill='%2300d5ff'%3ES%3C/text%3E%3Ctext x='17.5' y='24' font-family='Arial Black,Arial' font-weight='900' font-size='22' text-anchor='middle' fill='%23ff2a3d'%3ES%3C/text%3E%3Ctext x='16.7' y='24' font-family='Arial Black,Arial' font-weight='900' font-size='22' text-anchor='middle' fill='%23fff'%3ES%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#05060a; --ink:#eef3f8; --muted:#9aa6b4; --line:rgba(170,200,230,.16);
+  --cyan:#00e1ff; --red:#ff2a45; --panel:rgba(14,18,28,.62);
+  --chrome:linear-gradient(180deg,#ffffff 0%,#e6ebf0 34%,#8f99a5 50%,#ffffff 55%,#c9d0d8 78%,#7b8591 100%);
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace;
+  --display:"Arial Black","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;background:var(--bg) radial-gradient(120% 70% at 50% -10%,#16233a 0%,#0a0f1a 42%,var(--bg) 75%) no-repeat;background-attachment:fixed}
+body{margin:0;color:var(--ink);min-height:100vh;
+  font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:-2;pointer-events:none}
+/* faint CRT scanlines + vignette */
+body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:repeating-linear-gradient(0deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px),
+  radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
+.wrap{position:relative;max-width:30rem;margin:0 auto;
+  padding:max(2.25rem,env(safe-area-inset-top)) 1.25rem max(1.5rem,env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;min-height:100vh;min-height:100svh}
+
+/* ---------- Header ---------- */
+.hero{width:100%;text-align:center;margin-bottom:1.6rem}
+.col{width:100%;display:flex;flex-direction:column;align-items:center}
+.boot{font:500 .7rem/1.6 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:#7fdcff;
+  margin:0 0 .25rem;min-height:1.6em;opacity:.9}
+.boot .cur{display:inline-block;width:.55em;height:1em;vertical-align:-.15em;background:currentColor;margin-left:.15em}
+.boot .dot{display:inline-block;width:.45rem;height:.45rem;border-radius:50%;background:var(--red);
+  box-shadow:0 0 8px var(--red);margin-right:.5rem;vertical-align:.05em}
+/* Logo video. mix-blend-mode:screen makes its black background vanish into the starfield;
+   the mask feathers the square edges. Swap the <video> for an <img> the same way. */
+.hero-media{position:relative;width:min(78vw,380px);aspect-ratio:1;margin:-.5rem auto 0;
+  mix-blend-mode:screen;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translate3d(var(--mx,0px),var(--my,0px),0);
+  -webkit-mask-image:radial-gradient(closest-side,#000 72%,transparent 100%);
+  mask-image:radial-gradient(closest-side,#000 72%,transparent 100%);-webkit-tap-highlight-color:transparent;cursor:pointer}
+.hero-media video,.hero-media img{display:block;width:100%;height:100%;object-fit:cover;background:#000}
+/* RGB-split glitch flash */
+.hero-media .fx{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(0deg,transparent 0 9px,rgba(0,225,255,.18) 9px 11px,transparent 11px 23px,rgba(255,42,69,.16) 23px 25px)}
+.hero-media.flash video{filter:url(#rgbsplit)}
+@media (prefers-reduced-motion:no-preference){
+  .hero-media{transition:transform .25s ease-out}
+  .hero-media.flash video{animation:jit .38s steps(1,end)}
+  .hero-media.flash .fx{animation:fx .38s steps(1,end)}
+  .boot .cur{animation:blink 1s steps(1,end) infinite}
+}
+@keyframes jit{0%{transform:translate(4px,0) skewX(-3deg);clip-path:inset(0 0 0 0)}
+  25%{transform:translate(-6px,0);clip-path:inset(12% 0 30% 0)}
+  50%{transform:translate(3px,0) skewX(2deg);clip-path:inset(0 0 0 0)}
+  75%{transform:translate(-2px,0);clip-path:inset(40% 0 8% 0)}100%{transform:none;clip-path:none}}
+@keyframes fx{0%,60%{opacity:1}30%{opacity:.4;transform:translateY(6px)}100%{opacity:0}}
+@keyframes blink{50%{opacity:0}}
+.bio{max-width:34em;margin:.1rem auto 0;color:var(--muted);font-size:.95rem;line-height:1.65;text-wrap:pretty}
+.bio .lead{color:#dfe7ef}
+
+/* ---------- HUD panels (shared) ---------- */
+.hud{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:.75rem;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.hud::before,.hud::after{content:"";position:absolute;width:12px;height:12px;pointer-events:none;
+  border:solid rgba(0,225,255,.75);transition:all .2s ease}
+.hud::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-top-left-radius:.75rem}
+.hud::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-color:rgba(255,42,69,.8);border-bottom-right-radius:.75rem}
+
+/* ---------- Featured ---------- */
+.featured{width:100%;display:flex;align-items:center;gap:.95rem;text-decoration:none;
+  padding:1rem 1.1rem;margin-bottom:1.1rem;overflow:hidden;
+  background:linear-gradient(110deg,rgba(0,225,255,.12),rgba(14,18,28,.7) 45%,rgba(255,42,69,.14));
+  transition:transform .18s ease,box-shadow .18s ease}
+.featured:hover{transform:translateY(-2px);box-shadow:0 0 0 1px rgba(0,225,255,.35),0 12px 34px rgba(0,225,255,.12)}
+.featured .eyebrow{display:block;font:600 .68rem/1.4 var(--mono);letter-spacing:.2em;text-transform:uppercase;color:#7fdcff}
+.featured .eyebrow i{font-style:normal;color:var(--red)}
+.featured .title{display:block;font-family:var(--display);font-weight:900;font-size:1.18rem;letter-spacing:.07em;line-height:1.25}
+.featured .disc{flex:none;width:3rem;height:3rem;border-radius:50%;
+  background:radial-gradient(circle,#05060a 0 13%,#e9eef3 14% 18%,transparent 19%),
+  repeating-radial-gradient(circle,#11151d 0 2px,#1c222c 2px 3px);
+  box-shadow:0 0 0 1px rgba(255,255,255,.12),0 0 18px rgba(0,225,255,.25)}
+@media (prefers-reduced-motion:no-preference){.featured .disc{animation:spin 6s linear infinite}
+  .featured .disc{background:radial-gradient(circle,#05060a 0 13%,#e9eef3 14% 18%,transparent 19%),
+  conic-gradient(from 0deg,rgba(0,225,255,.35),transparent 18%,transparent 50%,rgba(255,42,69,.35) 55%,transparent 72%),
+  repeating-radial-gradient(circle,#11151d 0 2px,#1c222c 2px 3px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.featured .go{margin-left:auto;font:700 .72rem var(--mono);letter-spacing:.14em;color:#fff;
+  border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:.35rem .6rem;white-space:nowrap}
+
+/* ---------- Links ---------- */
+.links{list-style:none;margin:0;padding:0;width:100%;display:grid;gap:.7rem}
+.btn{display:flex;align-items:center;gap:.9rem;min-height:3.5rem;padding:.8rem 1.1rem;
+  text-decoration:none;font-weight:650;font-size:1.02rem;letter-spacing:.01em;overflow:hidden;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease}
+.btn svg{flex:none;width:1.45rem;height:1.45rem}
+.btn .lbl{position:relative}
+.btn .idx{margin-left:auto;font:500 .7rem var(--mono);letter-spacing:.12em;color:#5f6b79;transition:color .18s ease}
+/* scan sweep */
+.btn .sweep{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:linear-gradient(100deg,transparent 30%,rgba(0,225,255,.16) 48%,rgba(255,255,255,.22) 50%,rgba(255,42,69,.14) 52%,transparent 70%);
+  transform:translateX(-100%)}
+.btn:hover,.btn:focus-visible{transform:translateY(-2px);border-color:rgba(200,230,255,.32);background:rgba(20,26,40,.78);
+  box-shadow:-3px 0 0 rgba(0,225,255,.55),3px 0 0 rgba(255,42,69,.5),0 10px 30px rgba(0,0,0,.45)}
+.btn:hover .lbl,.btn:focus-visible .lbl{text-shadow:-2px 0 rgba(0,225,255,.85),2px 0 rgba(255,42,69,.85)}
+.btn:hover .idx,.btn:focus-visible .idx{color:#cfe9ff}
+.btn:hover::before,.btn:focus-visible::before{width:22px;height:22px}
+.btn:hover::after,.btn:focus-visible::after{width:22px;height:22px}
+@media (prefers-reduced-motion:no-preference){
+  .btn:hover .sweep,.btn:focus-visible .sweep{opacity:1;transform:translateX(100%);transition:transform .6s ease,opacity .1s}
+  .rise{opacity:0;transform:translateY(10px);animation:rise .5s cubic-bezier(.2,.7,.2,1) forwards;animation-delay:calc(var(--i,0) * 70ms + 250ms)}
+}
+@keyframes rise{to{opacity:1;transform:none}}
+a:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+
+/* ---------- Socials ---------- */
+.social{list-style:none;margin:1.5rem 0 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:.55rem}
+.social a{position:relative;display:grid;place-items:center;width:2.9rem;height:2.9rem;border-radius:50%;
+  color:#cfd8e2;background:rgba(14,18,28,.55);border:1px solid var(--line);
+  transition:color .18s ease,border-color .18s ease,transform .18s ease,box-shadow .18s ease}
+.social a:hover,.social a:focus-visible{color:#fff;border-color:rgba(200,230,255,.4);transform:translateY(-2px);
+  box-shadow:-2px 0 0 rgba(0,225,255,.6),2px 0 0 rgba(255,42,69,.55)}
+.social svg{width:1.2rem;height:1.2rem}
+
+footer{margin-top:auto;padding-top:1.75rem;color:#6d7887;font:500 .72rem/1.6 var(--mono);letter-spacing:.08em;text-align:center}
+footer .sig{display:block;color:#3f4a57;margin-top:.25rem}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+@media (min-width:768px){
+  .wrap{max-width:32rem;padding-top:3rem;padding-bottom:2rem}
+  .hero{margin-bottom:2rem}
+  .hero-media{width:360px}
+  .bio{font-size:1rem}
+}
+@media (max-width:420px){.featured{gap:.75rem;padding:.95rem .9rem}.featured .title{font-size:clamp(.95rem,4.3vw,1.18rem);white-space:nowrap}.featured .go{padding:.3rem .5rem;font-size:.66rem}}
+
+
+/* ---------- hi-tech layer ---------- */
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:linear-gradient(rgba(120,190,255,.05) 1px,transparent 1px) 0 0/56px 56px,
+             linear-gradient(90deg,rgba(120,190,255,.05) 1px,transparent 1px) 0 0/56px 56px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 0,transparent 100%);
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 0,transparent 100%)}
+.hud{border-radius:.5rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.hud::before{border-top-left-radius:.5rem}.hud::after{border-bottom-right-radius:.5rem}
+.logo-frame{position:relative;width:min(78vw,380px);margin:.5rem auto .9rem}
+.logo-frame .hero-media{margin:0 auto}
+.reticle{position:absolute;inset:0;pointer-events:none;color:rgba(127,220,255,.55)}
+.reticle svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.reticle .ring{transform-origin:50% 50%}
+.reticle .corner{position:absolute;width:18px;height:18px;border:solid rgba(127,220,255,.6)}
+.reticle .tl{top:0;left:0;border-width:1px 0 0 1px}.reticle .tr{top:0;right:0;border-width:1px 1px 0 0}
+.reticle .bl{bottom:0;left:0;border-width:0 0 1px 1px}.reticle .br{bottom:0;right:0;border-width:0 1px 1px 0;border-color:rgba(255,42,69,.7)}
+.reticle .ro{position:absolute;font:500 .58rem/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:rgba(127,220,255,.6)}
+.reticle .ro.a{top:5px;left:24px}.reticle .ro.b{bottom:5px;right:24px;color:rgba(255,120,140,.65)}
+@media (prefers-reduced-motion:no-preference){
+  .reticle .ring.r1{animation:spin 40s linear infinite}
+  .reticle .ring.r2{animation:spin 26s linear infinite reverse}}
+.sect{width:100%;display:flex;align-items:center;gap:.6rem;margin:0 0 .6rem;
+  font:500 .62rem/1 var(--mono);letter-spacing:.22em;text-transform:uppercase;color:#6f8597}
+.sect::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.sect b{font-weight:500;color:#7fdcff}
+.sect .ok{margin-left:auto;order:3;color:#5fe3a1}
+.sect .ok::before{content:"";display:inline-block;width:5px;height:5px;border-radius:50%;background:#5fe3a1;box-shadow:0 0 6px #5fe3a1;margin-right:.4rem;vertical-align:.1em}
+footer .clock{color:#55a9c9}
+@media (min-width:768px){.logo-frame{width:360px}}
+
+/* drifting ship */
+main.wrap{position:relative}
+#ship{position:fixed;left:0;top:0;width:92px;height:59px;z-index:0;cursor:pointer;will-change:transform;
+  filter:drop-shadow(0 0 1px rgba(200,230,255,.9)) drop-shadow(0 0 8px rgba(0,225,255,.45));-webkit-tap-highlight-color:transparent;user-select:none}
+#ship img{width:100%;height:100%;display:block;position:relative;pointer-events:none}
+#ship .flame{position:absolute;left:-14px;top:68%;width:22px;height:8px;margin-top:-4px;border-radius:50%;
+  background:radial-gradient(ellipse at right,#fff 0,#00e1ff 40%,rgba(0,225,255,0) 75%);transform-origin:right center;animation:flick .12s steps(2) infinite}
+#ship.boost .flame{transform:scaleX(2.8)}
+#ship.glitch{filter:drop-shadow(-3px 0 0 rgba(255,42,69,.9)) drop-shadow(3px 0 0 rgba(0,225,255,.9))}
+@keyframes flick{0%{opacity:.75}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){#ship{display:none}}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><filter id="rgbsplit" x="-3%" y="0" width="106%" height="100%" color-interpolation-filters="sRGB"><feColorMatrix in="SourceGraphic" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="r"/><feOffset in="r" dx="-7" result="r2"/><feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0" result="gb"/><feOffset in="gb" dx="5" result="gb2"/><feBlend in="r2" in2="gb2" mode="screen"/></filter></svg>
+<canvas id="stars" aria-hidden="true"></canvas>
+<div id="ship" aria-hidden="true" title="poke me"><span class="flame"></span><img src="assets/ship.png" alt="" width="220" height="141" draggable="false"></div>
+<main class="wrap">
+  <header class="hero">
+    <p class="boot" aria-hidden="true"><span class="dot"></span><span id="boot-text">Incoming transmission // Signal acquired</span><span class="cur"></span></p>
+    <div class="logo-frame">
+    <div class="reticle" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <g class="ring r1"><circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" stroke-width=".25" stroke-dasharray="1 2.2"/></g>
+          <g class="ring r2"><circle cx="50" cy="50" r="45.5" fill="none" stroke="currentColor" stroke-width=".35" stroke-dasharray="18 10 3 10" opacity=".7"/></g>
+          <path d="M50 0v3M50 97v3M0 50h3M97 50h3" stroke="currentColor" stroke-width=".4"/>
+        </svg>
+        <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+        <span class="ro a">SIG-01 // LOCKED</span><span class="ro b" id="coord">TRK 000.00</span>
+      </div>
+    <div class="hero-media" id="logo">
+      <video id="logo-video" autoplay muted loop playsinline preload="auto" poster="assets/logo-poster.jpg" width="720" height="720" aria-label="Simulnaut logo: Earth gripped by red octopus tentacles">
+        <source src="assets/logo-loop.webm" type="video/webm">
+        <source src="assets/logo-loop.mp4" type="video/mp4">
+      </video>
+      <script>if(matchMedia('(prefers-reduced-motion: reduce)').matches){const v=document.getElementById('logo-video');v.removeAttribute('autoplay');v.preload='none';v.pause();}</script>
+      <span class="fx" aria-hidden="true"></span>
+    </div>
+    </div>
+    <h1 class="sr-only">Simulnaut</h1>
+    <p class="bio"><span class="lead">Simulnaut is an independent electronic music project with a focus on space, sci-fi, and faith.</span> Every release is a transmission.</p>
+  </header>
+
+  <section class="col" aria-label="Links">
+  <a class="featured hud rise" style="--i:0" href="https://simulnaut.bandcamp.com" target="_blank" rel="noopener">
+    <span class="disc" aria-hidden="true"></span>
+    <span><span class="eyebrow"><i>●</i> Latest release</span><span class="title">RETURN TO EARTH</span></span>
+    <span class="go" aria-hidden="true">LISTEN →</span>
+  </a>
+
+  <nav aria-label="Listen" style="width:100%">
+    <p class="sect rise" style="--i:1" aria-hidden="true"><b>//</b> Channels <span class="ok">Online</span></p>
+    <ul class="links">
+      <li class="rise" style="--i:1"><a class="btn hud" href="https://simulnaut.bandcamp.com" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1DA0C3" d="M0 18.75l7.437-13.5H24l-7.438 13.5z"/></svg>
+        <span class="lbl">Bandcamp</span><span class="idx" aria-hidden="true">01 ↗</span><span class="sweep" aria-hidden="true"></span></a></li>
+      <li class="rise" style="--i:2"><a class="btn hud" href="https://open.spotify.com/artist/2VH79c9oPWfVCq7cZw8foo" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1DB954"/><path d="M6 9.2c4-1.2 8.6-.8 12 1.2M6.7 12.5c3.3-.9 7-.6 9.9 1M7.4 15.6c2.6-.7 5.4-.5 7.7.8" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round"/></svg>
+        <span class="lbl">Spotify</span><span class="idx" aria-hidden="true">02 ↗</span><span class="sweep" aria-hidden="true"></span></a></li>
+      <li class="rise" style="--i:3"><a class="btn hud" href="https://music.apple.com/us/artist/simulnaut/1871636993" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="am" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FA5C6F"/><stop offset="1" stop-color="#F9243F"/></linearGradient></defs><rect width="24" height="24" rx="5.5" fill="url(#am)"/><path d="M16.5 5.5v9.2a2.2 2.2 0 1 1-1.4-2V8.4l-5.2 1.1v6.9a2.2 2.2 0 1 1-1.4-2V7.4z" fill="#fff"/></svg>
+        <span class="lbl">Apple Music</span><span class="idx" aria-hidden="true">03 ↗</span><span class="sweep" aria-hidden="true"></span></a></li>
+      <li class="rise" style="--i:4"><a class="btn hud" href="https://soundcloud.com/simulnaut" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#FF5500" d="M11 8.2c.6-.3 1.3-.5 2-.6 3-.3 5.6 1.8 6 4.7.3-.1.7-.2 1.1-.2a2.9 2.9 0 0 1 0 5.8H11zM9.4 9.3h.9v8.6h-.9zM7.6 10.2h.9v7.7h-.9zM5.8 10.9h.9v7h-.9zM4 12.1h.9v5.8H4zM2.2 13.2h.9v4.5h-.9zM.5 14.4h.8v2.8H.5z"/></svg>
+        <span class="lbl">SoundCloud</span><span class="idx" aria-hidden="true">04 ↗</span><span class="sweep" aria-hidden="true"></span></a></li>
+      <li class="rise" style="--i:5"><a class="btn hud" href="https://www.youtube.com/@simulnaut" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="0" y="3.5" width="24" height="17" rx="5" fill="#FF0000"/><path d="M9.6 8.4v7.2l6.2-3.6z" fill="#fff"/></svg>
+        <span class="lbl">YouTube</span><span class="idx" aria-hidden="true">05 ↗</span><span class="sweep" aria-hidden="true"></span></a></li>
+    </ul>
+  </nav>
+
+  <ul class="social rise" style="--i:6" aria-label="Social media">
+    <li><a href="https://instagram.com/simulnaut" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg></a></li>
+    <li><a href="https://www.facebook.com/Simulnaut/" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M13.6 22v-8.2h2.8l.4-3.3h-3.2V8.4c0-.9.3-1.6 1.6-1.6H17V3.9c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.5v3.3h2.8V22z"/></svg></a></li>
+    <li><a href="https://x.com/simulnaut" target="_blank" rel="noopener" aria-label="X (Twitter)">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M18.9 1.2h3.7l-8 9.2L24 22.8h-7.4l-5.8-7.6-6.6 7.6H.5l8.6-9.8L0 1.2h7.6l5.2 6.9zm-1.3 19.5h2L6.5 3.2H4.3z"/></svg></a></li>
+    <li><a href="https://www.threads.net/@simulnaut" target="_blank" rel="noopener" aria-label="Threads">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17.6 7.4C16.5 4.6 14.4 3 11.9 3 7.2 3 4.5 6.6 4.5 12s2.7 9 7.4 9c3.9 0 6.6-2.3 6.6-5.4 0-2.8-2.2-4.4-5.3-4.4-2.4 0-4 1.2-4 2.9 0 1.5 1.3 2.6 3 2.6 2.6 0 3.8-2.2 3.8-5.9 0-1.4-1-2.5-2.9-2.5-1.2 0-2.2.5-2.8 1.3"/></svg></a></li>
+    <li><a href="https://www.twitch.tv/simulnaut" target="_blank" rel="noopener" aria-label="Twitch">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M11.6 4.7h1.7v5.1h-1.7zm4.7 0H18v5.1h-1.7zM6 0 1.7 4.3v15.4h5.2V24l4.2-4.3h3.5L22.3 12V0zm14.6 11.1-3.4 3.5h-3.5l-3 3v-3H6.9V1.7h13.7z"/></svg></a></li>
+    <li><a href="https://www.reverbnation.com/simulnaut" target="_blank" rel="noopener" aria-label="ReverbNation">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="1.5" y="4.5" width="21" height="15" rx="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.6 15.6V8.4h2.6a2 2 0 0 1 0 4H6.1m1.9 0 2 3.2M13.4 15.6V8.4l4.6 7.2V8.4" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+  </ul>
+  </section>
+
+  <footer>© 2026 Simul Recording Studios<span class="sig" aria-hidden="true">SIGNAL ORIGIN: UNKNOWN DIMENSION</span><span class="sig clock" id="clock" aria-hidden="true">SYS --:--:-- UTC</span></footer>
+</main>
+<script>
+(()=>{
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Boot-up "transmission" typing
+  const bt=document.getElementById('boot-text');
+  if(bt&&!reduce){const full=bt.textContent;bt.textContent='';let k=0;
+    const tick=()=>{bt.textContent=full.slice(0,++k);if(k<full.length)setTimeout(tick,28+Math.random()*40)};setTimeout(tick,200);}
+  // Logo: RGB-split flash on tap/hover, tilt via loop below
+  const L=document.getElementById('logo');
+  const flash=()=>{if(reduce)return;L.classList.remove('flash');void L.offsetWidth;L.classList.add('flash');clearTimeout(L._t);L._t=setTimeout(()=>L.classList.remove('flash'),400)};
+  L.addEventListener('pointerdown',flash);L.addEventListener('mouseenter',flash);
+  if(!reduce)setTimeout(flash,1400);
+  // Starfield with pointer/tilt parallax
+  const c=document.getElementById('stars'),x=c.getContext('2d');
+  let W,H,D,stars=[],tx=0,ty=0,px=0,py=0,raf;
+  const make=()=>{D=Math.min(devicePixelRatio||1,2);W=innerWidth;H=innerHeight;c.width=W*D;c.height=H*D;x.setTransform(D,0,0,D,0,0);
+    const n=Math.round(Math.min(260,W*H/4200));stars=[];
+    for(let i=0;i<n;i++){const z=Math.random();stars.push({x:Math.random()*W,y:Math.random()*H,z,r:.35+z*1.25,
+      a:.25+z*.7,tw:Math.random()*6.28,hue:Math.random()<.08?(Math.random()<.5?'0,225,255':'255,80,100'):'235,242,255'})}};
+  const draw=t=>{px+=(tx-px)*.06;py+=(ty-py)*.06;x.clearRect(0,0,W,H);
+    for(const s of stars){const d=8+s.z*34;let sx=s.x+px*d,sy=s.y+py*d;
+      if(!reduce)s.y-=.03+s.z*.12; if(s.y<-40)s.y=H+40;
+      sx=((sx%W)+W)%W;
+      const al=reduce?s.a:s.a*(.75+.25*Math.sin(t*.0015+s.tw));
+      x.fillStyle=`rgba(${s.hue},${al})`;x.beginPath();x.arc(sx,sy,s.r,0,6.283);x.fill()}
+    if(!reduce){const st=L.style;st.setProperty('--ry',(-px*7).toFixed(2)+'deg');st.setProperty('--rx',(py*7).toFixed(2)+'deg');st.setProperty('--mx',(px*-6).toFixed(1)+'px');st.setProperty('--my',(py*-6).toFixed(1)+'px')}
+    if(!reduce)raf=requestAnimationFrame(draw)};
+  make();addEventListener('resize',()=>{make();if(reduce)draw(0)});
+  if(!reduce){
+    addEventListener('pointermove',e=>{tx=(e.clientX/W-.5)*-1;ty=(e.clientY/H-.5)*-1},{passive:true});
+    addEventListener('deviceorientation',e=>{if(e.gamma==null)return;tx=Math.max(-1,Math.min(1,e.gamma/30))*-.5;ty=Math.max(-1,Math.min(1,(e.beta-45)/30))*-.5},{passive:true});
+    document.addEventListener('visibilitychange',()=>{cancelAnimationFrame(raf);if(!document.hidden)raf=requestAnimationFrame(draw)});
+    raf=requestAnimationFrame(draw);
+  } else draw(0);
+})();
+</script>
+<script>
+(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+const el=document.getElementById('ship');let W,H;const rs=()=>{W=innerWidth;H=innerHeight};rs();addEventListener('resize',rs);
+let x=-80,y=H*.3,a=0,sp=1.1,boost=0,t=0,tx,ty;
+const pick=()=>{tx=Math.random()*W;ty=60+Math.random()*(H-120)};pick();
+function step(){t++;const dx=tx-x,dy=ty-y,d=Math.hypot(dx,dy);if(d<60)pick();
+ let want=Math.atan2(dy,dx),da=Math.atan2(Math.sin(want-a),Math.cos(want-a));a+=da*0.025;
+ const v=sp+boost;x+=Math.cos(a)*v;y+=Math.sin(a)*v+Math.sin(t/40)*.25;boost*=.97;if(boost<.05){boost=0;el.classList.remove('boost')}
+ if(x<-90)x=W+70;if(x>W+90)x=-70;if(y<-60)y=H+40;if(y>H+60)y=-40;
+ el.style.transform=`translate(${x-46}px,${y-30}px) rotate(${a}rad)${Math.cos(a)<0?' scaleY(-1)':''}`;requestAnimationFrame(step)}
+requestAnimationFrame(step);
+const poke=e=>{e.preventDefault();boost=9;a+=(Math.random()-.5)*1.2;pick();el.classList.add('boost','glitch');setTimeout(()=>el.classList.remove('glitch'),180)};
+el.addEventListener('pointerdown',poke);
+})();
+</script>
+<script>
+(()=>{const c=document.getElementById('clock'),k=document.getElementById('coord');let n=0;
+const tick=()=>{const d=new Date();c.textContent='SYS '+d.toISOString().slice(11,19)+' UTC';
+ n=(n+7.31)%360;k.textContent='TRK '+n.toFixed(2).padStart(6,'0');};tick();setInterval(tick,1000);})();
+</script>
+</body>
+</html>
